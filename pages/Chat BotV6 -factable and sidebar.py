@@ -289,6 +289,7 @@ def init_bigquery_client():
 
 def run_bigquery_query(query):
     client = init_bigquery_client(json_file_path)
+        
     if client and query:
         try:
             # Set up query job and execute
