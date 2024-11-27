@@ -19,6 +19,17 @@ st.set_page_config(
 )
 st.title("🌟 Machine Learning Application")
 
+
+# ---------------- Load Gemini Key ----------------
+# Load Gemini API Key
+gemini_api_key = st.secrets["api_keys"].get("gemini_api_key")
+
+# Validate and load keys
+if gemini_api_key:
+    st.success("Gemini API Key loaded successfully!")
+else:
+    st.error("Failed to load Gemini API Key. Please check your secrets.")
+
 # ---------------- Load JSON file ----------------
 # Load JSON google Key
 google_service_account_key = st.secrets["google"].get("service_account_key")
@@ -111,7 +122,7 @@ if st.button("Run ML"):
     # st.dataframe(cust_lo_df)
     
     # ---------------- Googlemap function ----------------
-    gmaps = googlemaps.Client(key='AIzaSyDhAZcviLzIYzZBflEjilpTG5wpR15Xf3o')
+    gmaps = googlemaps.Client(key=gemini_api_key)
     def get_distance_and_duration(origin, destination):
         result = gmaps.distance_matrix(origins=[origin], destinations=[destination], mode="driving")
         distance = result["rows"][0]["elements"][0]["distance"]["text"]
