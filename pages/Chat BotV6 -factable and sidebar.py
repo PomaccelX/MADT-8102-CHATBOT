@@ -190,7 +190,35 @@ data_dict = """ If  it's a question or requirement or any wording that about ret
                     The 'regionId' column in the 'region' table is a                               one-to-many    relationship with the 'regionId' column in the 'zone' table.
                     
                     """     
+#----------------------------------------------------------------------------------------------------------------------
+
+# Initialize session state variables if not already present
+if "gemini_api_key" not in st.session_state:
+    st.session_state.gemini_api_key = None
+
+if "google_service_account_josn" not in st.session_state:
+    st.session_state.google_service_account_json = None
+
+if "qry" not in st.session_state:
+    st.session_state.qry = None # Store SQL qury
+
+# Create Chatbot history
+if "chat_history" not in st.session_state:
+    st.session_state.chat_history = [] # Empty list
+
+# Create user_input history
+if "user_input_history" not in st.session_state:
+    st.session_state.user_input_history = []
+
+if "qry" not in st.session_state:
+    st.session_state.qry = None  # Store SQL query here
+
+# Generate welcome message if gemini key correct
+if "greeted" not in st.session_state:
+    st.session_state.greeted = False
+
 #-----------------------------------------------------------------------------------------------------------
+
 # AI System Functions
 ## Agent 01: Categorize User Input
 
@@ -240,6 +268,7 @@ def TF_graph(result_data):
     The code should be fully executable in a Python environment and ready to display"""
     response = agent_05.generate_content(result_prompt)
     return response.text.strip()
+
 #---------------------------------------------------------------------------------------------------
 # Big query system 
 ## Function to initialize BigQuery client
@@ -259,10 +288,8 @@ def init_bigquery_client(json_file_path):
         st.error("Service account JSON file not loaded. Please provide a valid file.")
         return None
 
-
 def run_bigquery_query(query):
     client = init_bigquery_client(json_file_path)
-        
     if client and query:
         try:
             # Set up query job and execute
@@ -277,33 +304,8 @@ def run_bigquery_query(query):
     else:
         st.error("BigQuery client not initialized or query is empty.")
         return None
+
 #----------------------------------------------------------------------------------------------------------------------
-
-# Initialize session state variables if not already present
-if "gemini_api_key" not in st.session_state:
-    st.session_state.gemini_api_key = None
-
-if "google_service_account_josn" not in st.session_state:
-    st.session_state.google_service_account_json = None
-
-if "qry" not in st.session_state:
-    st.session_state.qry = None # Store SQL qury
-
-# Create Chatbot history
-if "chat_history" not in st.session_state:
-    st.session_state.chat_history = [] # Empty list
-
-# Create user_input history
-if "user_input_history" not in st.session_state:
-    st.session_state.user_input_history = []
-
-if "qry" not in st.session_state:
-    st.session_state.qry = None  # Store SQL query here
-
-# Generate welcome message if gemini key correct
-if "greeted" not in st.session_state:
-    st.session_state.greeted = False
-
 # Sidebar to display user input history as buttons
 st.sidebar.title("User Input History")
 
