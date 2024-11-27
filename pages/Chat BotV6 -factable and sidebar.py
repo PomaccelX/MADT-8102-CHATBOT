@@ -7,10 +7,19 @@ import db_dtypes
 
 # Main Application Title 
 st.title("ChatBot 0.42 MADT")
-headers = {
-    "authorization" : st.secrets["gemini_api_key"],
-    "content-type" : "application/json"
-}
+
+# Access Gemini API key
+gemini_api_key = st.secrets["api_keys"]["gemini_api_key"]
+
+# Access Google Service Account Key
+service_account_key = st.secrets["google"]["service_account_key"]
+
+# Convert the service account key into a Python dictionary
+key_dict = json.loads(service_account_key)
+
+# Display the keys (for debugging purposes; don't expose keys in production)
+st.write(f"Gemini API Key: {gemini_api_key}")
+st.write("Service Account Key:", key_dict)
 
 #---------------------------------------------------------------------------------------------------
 ##--------------------------------------------------------------------------------------
