@@ -217,6 +217,7 @@ if "qry" not in st.session_state:
 if "greeted" not in st.session_state:
     st.session_state.greeted = False
 
+
 #-----------------------------------------------------------------------------------------------------------
 
 # AI System Functions
@@ -272,14 +273,11 @@ def TF_graph(result_data):
 #---------------------------------------------------------------------------------------------------
 # Big query system 
 ## Function to initialize BigQuery client
-def init_bigquery_client(json_file_path):
-        
-    # Check if the JSON file is loaded into the session state
-    if "google_service_account_json" in st.session_state:
+def init_bigquery_client():
+
+    if "google_service_account_json" in st.session_state and st.session_state.google_service_account_json:
         try:
-            # Initialize BigQuery client
             client = bigquery.Client.from_service_account_info(st.session_state.google_service_account_json)
-            #st.success("BigQuery client initialized successfully!")
             return client
         except Exception as e:
             st.error(f"Error initializing BigQuery client: {e}")
@@ -287,6 +285,7 @@ def init_bigquery_client(json_file_path):
     else:
         st.error("Service account JSON file not loaded. Please provide a valid file.")
         return None
+
 
 def run_bigquery_query(query):
     client = init_bigquery_client(json_file_path)
