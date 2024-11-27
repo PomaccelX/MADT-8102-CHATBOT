@@ -309,7 +309,7 @@ if st.sidebar.button("Clear History"):
 
 # Loop through the user input history and create a button for each one
 for i, prompt in enumerate(st.session_state.user_input_history, start=1):
-    if st.sidebar.markdown(f"{i}. {prompt}"):
+    if st.sidebar.button(f"{i}. {prompt}"):
         # Reset chat history with the selected prompt
         st.session_state.chat_history = [("user", prompt)]
         #st.session_state.rerun_needed = False  # Set flag to trigger a rerun
