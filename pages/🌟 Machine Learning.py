@@ -12,11 +12,11 @@ import plotly.graph_objects as go
 from geopy.distance import geodesic
 
 st.set_page_config(
-    page_title="Machine Learning for MADT application",
+    page_title="Machine Learning Application",
     page_icon="🌟",
     layout="wide" 
 )
-st.title("🌟 Machine Learning for MADT application")
+st.title("🌟 Machine Learning Application")
 
 # ---------------- Upload JSON file ----------------
 def create_bigquery_client(json_file):
