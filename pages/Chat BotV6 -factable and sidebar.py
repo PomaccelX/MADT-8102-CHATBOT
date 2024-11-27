@@ -5,27 +5,6 @@ import plotly.express as px
 import json
 import db_dtypes
 
-# Main Application Title 
-st.title("ChatBot 0.42 MADT")
-
-# Access Gemini API key
-gemini_api_key = st.secrets["api_keys"]["gemini_api_key"]
-
-# Access Google Service Account Key
-service_account_key = st.secrets["google"]["service_account_key"]
-
-
-# Convert the service account key into a Python dictionary
-key_dict = json.loads(service_account_key)
-json_file_path = key_dict
-
-st.success("BigQuery client initialized successfully!")
-st.success("Google Service Account Key pull from secret successfully!")
-# Display the keys (for debugging purposes; don't expose keys in production)
-#st.write(f"Gemini API Key: {gemini_api_key}")
-#st.write("Service Account Key:", key_dict)
-
-#---------------------------------------------------------------------------------------------------
 ##--------------------------------------------------------------------------------------
 data_dict = """ If  it's a question or requirement or any wording that about retrieving data from a database base on 
                     the table name is 'madt8102-chatbot-final-project.datasets.fact_transaction'
@@ -193,68 +172,115 @@ data_dict = """ If  it's a question or requirement or any wording that about ret
                     """     
 
 #---------------------------------------------------------------------------------------------------------------------------
-# Ai system function 
+
+# Main Application Title
+st.title("ChatBot 0.42 MADT")
+
+# Load secrets securely from Streamlit
+gemini_api_key = st.secrets["api_keys"].get("gemini_api_key")
+service_account_key = st.secrets["google"].get("service_account_key")
+
+if gemini_api_key and service_account_key:
+    st.success("Gemini API Key and Service Account Key loaded successfully!")
+else:
+    st.error("Failed to load Gemini API Key or Service Account Key. Please check your secrets.")
+
+# Convert service account key into a Python dictionary
+try:
+    key_dict = json.loads(service_account_key)
+except json.JSONDecodeError:
+    st.error("Error decoding the Service Account Key. Please check the format.")
+    key_dict = None
+
+# AI Agents Initialization (Improved: Using a function to reduce code duplication)
+def init_genai_agent(model_name):
+    return genai.GenerativeModel(model_name)
+
+agent_01 = init_genai_agent("gemini-pro")
+agent_02 = init_genai_agent("gemini-pro")
+agent_03 = init_genai_agent("gemini-pro")
+agent_04 = init_genai_agent("gemini-pro")
+agent_05 = init_genai_agent("gemini-pro")
+
+#---------------------------------------------------------------------------------------------------
+# AI System Functions
 
 ## Agent 01: Categorize User Input
-agent_01 = genai.GenerativeModel("gemini-pro")
 def categorize_task(user_input):
-    categorize_prompt = f"""Categorize the following user input into one of two categories, you will return only 01 or 02::
-                        - "01" : query_question if it's a question or requirement or any wording that about retrieving data from a database base on {data_dict}
-                        - "02" : common_conversation if it's a general conversation such as greeting, general question, and anything else.
-                        User input: "{user_input}" """
-    response = agent_01.generate_content(categorize_prompt)
-    bot_response = response.text.strip()
-    return bot_response
+    categorize_prompt = f"""
+    Categorize the following user input into one of two categories:
+    - "01" : query_question (if it's related to retrieving data from a database based on {data_dict})
+    - "02" : common_conversation (if it's a general conversation such as greetings or casual chat)
+    User input: "{user_input}"
+    """
+    try:
+        response = agent_01.generate_content(categorize_prompt)
+        return response.text.strip()
+    except Exception as e:
+        st.error(f"Error in categorizing task: {e}")
+        return "Error"
 
-## Agent 02: Query data from Big query
-agent_02 = genai.GenerativeModel("gemini-pro")
+## Agent 02: Generate SQL Query from User Input
 def generate_sql_query(user_input):
-    sql_prompt = f"""You are an AI assistant that transforms user questions into SQL queries to retrieve data from a BigQuery database.
-                  {data_dict} Use this information to generate accurate SQL queries based on user input.
-                  Generate a SQL query based on the user's input: '{user_input}'."""
-    response = agent_02.generate_content(sql_prompt)
-    bot_response = response.text.strip()
-    clean_format_sql = bot_response.replace('\n', ' ').replace('sql', '').replace('   ',' ').replace('```','').strip()
-    return  clean_format_sql
+    sql_prompt = f"""
+    You are an AI assistant that transforms user questions into SQL queries to retrieve data from a BigQuery database.
+    {data_dict} Use this information to generate accurate SQL queries based on user input.
+    Generate a SQL query based on the user's input: '{user_input}'
+    """
+    try:
+        response = agent_02.generate_content(sql_prompt)
+        sql_query = response.text.strip().replace('\n', ' ').replace('sql', '').replace('   ',' ').replace('```','')
+        return sql_query
+    except Exception as e:
+        st.error(f"Error generating SQL query: {e}")
+        return "Error"
 
-## Agent 03: Respond to General Conversation
-agent_03 = genai.GenerativeModel("gemini-pro")
+## Agent 03: General Conversation
 def general_conversation(user_input):
     conversation_prompt = f"""Respond to this user input in a friendly conversational style: "{user_input}" """
-    response = agent_03.generate_content(conversation_prompt)
-    bot_response = response.text.strip() 
-    return bot_response
+    try:
+        response = agent_03.generate_content(conversation_prompt)
+        return response.text.strip()
+    except Exception as e:
+        st.error(f"Error in general conversation: {e}")
+        return "Error"
 
 # Agent 04: Transform SQL Query Result into Conversational Answer
-agent_04 = genai.GenerativeModel("gemini-pro")
 def sql_result_to_conversation(result_data):
-    result_prompt = f"""Take the following structured SQL query result and create a friendly answer result : "{result_data}" """
-    response = agent_04.generate_content(result_prompt)
-    return response.text.strip()
+    result_prompt = f"""Take the following structured SQL query result and create a friendly answer result: "{result_data}" """
+    try:
+        response = agent_04.generate_content(result_prompt)
+        return response.text.strip()
+    except Exception as e:
+        st.error(f"Error transforming SQL result: {e}")
+        return "Error"
 
-# Agent 05: Transform Pandas dataframe into python code for plot the chart 
-agent_05 = genai.GenerativeModel("gemini-pro")
+# Agent 05: Transform Pandas DataFrame into Python Code for Plotting
 def TF_graph(result_data):
-    result_prompt = f"""Generate Python code to:
+    result_prompt = f"""
+    Generate Python code to:
     1. Define a Pandas DataFrame named `df` based on the following data structure: {result_data}.
     2. Use plotly express to create a suitable graph based on the DataFrame structure and color by data.
     3. Return only executable Python code without markdown formatting or comments.
-    The code should be fully executable in a Python environment and ready to display"""
-    response = agent_05.generate_content(result_prompt)
-    return response.text.strip()
+    The code should be fully executable in a Python environment and ready to display.
+    """
+    try:
+        response = agent_05.generate_content(result_prompt)
+        return response.text.strip()
+    except Exception as e:
+        st.error(f"Error generating graph code: {e}")
+        return "Error"
 
-##--------------------------------------------------------------------------------------
-# Big query system 
-## Function to initialize BigQuery client
+##------------------------------------------------------------------------------------------------------
+# BigQuery System
+
+# Function to initialize BigQuery client
 def init_bigquery_client(json_file_path):
-
-        
-    # Check if the JSON file is loaded into the session state
+    """Initializes BigQuery client using service account credentials."""
     if "google_service_account_json" in st.session_state:
         try:
-            # Initialize BigQuery client
+            st.write(f"Session state JSON: {st.session_state.google_service_account_json}")  # Debugging line
             client = bigquery.Client.from_service_account_info(st.session_state.google_service_account_json)
-            #st.success("BigQuery client initialized successfully!")
             return client
         except Exception as e:
             st.error(f"Error initializing BigQuery client: {e}")
@@ -263,17 +289,15 @@ def init_bigquery_client(json_file_path):
         st.error("Service account JSON file not loaded. Please provide a valid file.")
         return None
 
-
+# Function to execute a BigQuery SQL query
 def run_bigquery_query(query):
-    client = init_bigquery_client(json_file_path)
-        
+    """Executes a BigQuery query and returns the result as a Pandas DataFrame."""
+    client = init_bigquery_client(service_account_key)  # Assumes `service_account_key` is passed correctly
     if client and query:
         try:
-            # Set up query job and execute
             query_job = client.query(query)
             results = query_job.result()
             df = results.to_dataframe()
-            #st.success("Query executed successfully!")
             return df
         except Exception as e:
             st.error(f"Error executing BigQuery query: {e}")
