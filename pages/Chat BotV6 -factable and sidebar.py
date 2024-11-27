@@ -7,6 +7,11 @@ import db_dtypes
 
 # Main Application Title 
 st.title("ChatBot 0.42 MADT")
+headers = {
+    "authorization" : st.secrets["gemini_api_key"],
+    "content-type" : "application/json"
+
+}
 
 #---------------------------------------------------------------------------------------------------
 ##--------------------------------------------------------------------------------------
@@ -397,7 +402,7 @@ for i, prompt in enumerate(st.session_state.user_input_history, start=1):
 
 ## Create an type space for GEMINI API KEY
 
-gemini_api_key = 'AIzaSyBgvCcXEPMApduoTr_w8qJBQsrMan8rEDM'
+#gemini_api_key = 'AIzaSyBgvCcXEPMApduoTr_w8qJBQsrMan8rEDM'
 #gemini_api_key = st.text_input("Gemini API key : ", placeholder= "Type your API Key here...", type = 'password')
 
 #------------------------------------------------------------------------------------------------------------------------
