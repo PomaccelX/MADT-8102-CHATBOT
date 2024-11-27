@@ -18,5 +18,10 @@ team_members = {
 for name, info in team_members.items():
     st.subheader(name)
     st.write(f"ID: {info['id']}")
-    st.image(info['image'], width=200)
+    
+    try:
+        st.image(info['image'], width=200)
+    except Exception as e:
+        st.write(f"Error loading image: {e}")
+    
     st.write("---")
