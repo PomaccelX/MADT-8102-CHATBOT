@@ -259,7 +259,7 @@ def init_bigquery_client():
 
             # Initialize BigQuery client using the service account JSON
             client = bigquery.Client.from_service_account_info(service_account_data)
-            st.success("BigQuery client initialized successfully!")
+            #st.success("BigQuery client initialized successfully!")
             return client
         else:
             st.error("Google Service Account Key not found in secrets. Please check your configuration.")
