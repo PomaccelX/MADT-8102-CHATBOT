@@ -1,19 +1,22 @@
-
 import streamlit as st
 
-# Add a title to the page
-st.title("Welcome to My Streamlit App")
+# Title of the page
+st.title("Team Members")
 
-# Add a header
-st.header("An Amazing Streamlit Experience")
+# Create a dictionary of team members and their information
+team_members = {
+    "จิรวัฒน์ เขมสถิตย์อนันต์": {"id": "6610422024", "image": "/workspaces/MADT-8102-CHATBOT/member/image1.jpg"},
+    "ธนวัฒน์ เหลืองวิโรจน์": {"id": "6610422005", "image": "/workspaces/MADT-8102-CHATBOT/member/image2.jpg"},
+    "ตรีภพ เนตรภู่": {"id": "6610422011", "image": "/workspaces/MADT-8102-CHATBOT/member/image3.jpg"},
+    "บุลวัชร์ เจริญยืนนาน": {"id": "6610422013", "image": "/workspaces/MADT-8102-CHATBOT/member/image4.jpg"},
+    "ชยพล หมื่นแจ้ง": {"id": "6610412004", "image": "/workspaces/MADT-8102-CHATBOT/member/image5.jpg"},
+    "บวรวิชญ์ ศรีมาศ": {"id": "6610424030", "image": "/workspaces/MADT-8102-CHATBOT/member/image6.jpg"},
+    "ณัฏฐชัย ใจรักษ์": {"id": "6610422021", "image": "/workspaces/MADT-8102-CHATBOT/member/image7.jpg"}
+}
 
-# Add a cover image
-st.image("pages/gojo.jpg", use_column_width=True)
-
-# Add some introductory text
-st.markdown("""
-Welcome to my Streamlit homepage! Here, you can explore various features and interact with the app. 
-Streamlit is a great way to build beautiful data apps with just a few lines of Python code. 
-Let’s dive in and make your experience interactive!
-""")
-
+# Display information about each team member
+for name, info in team_members.items():
+    st.subheader(name)
+    st.write(f"ID: {info['id']}")
+    st.image(info['image'], width=200)
+    st.write("---")
