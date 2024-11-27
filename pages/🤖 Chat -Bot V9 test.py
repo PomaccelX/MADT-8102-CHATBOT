@@ -23,7 +23,7 @@ if gemini_api_key:
 else:
     st.error("Failed to load Gemini API Key. Please check your secrets.")
 
-
+# Load JSON google Key
 google_service_account_key = st.secrets["google"].get("service_account_key")
 if google_service_account_key:
     try:
