@@ -10,7 +10,6 @@ st.title("ChatBot 0.42 MADT")
 headers = {
     "authorization" : st.secrets["gemini_api_key"],
     "content-type" : "application/json"
-
 }
 
 #---------------------------------------------------------------------------------------------------
