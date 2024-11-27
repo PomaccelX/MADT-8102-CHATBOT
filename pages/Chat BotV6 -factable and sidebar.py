@@ -244,30 +244,44 @@ def TF_graph(result_data):
 #---------------------------------------------------------------------------------------------------
 # Big query system 
 # Function to initialize BigQuery client
+# Load the JSON file directly from a path
+SERVICE_ACCOUNT_JSON_PATH = "path/to/your-service-account.json"  # Replace with your file path
+
+def load_service_account_json(path):
+    try:
+        with open(path, "r") as file:
+            service_account_json = json.load(file)
+            st.session_state.google_service_account_json = service_account_json
+            st.success("Service account JSON file loaded successfully!")
+    except Exception as e:
+        st.error(f"Failed to load JSON file: {e}")
+
 def init_bigquery_client():
-    # Check if the JSON file is loaded into the session state
     if "google_service_account_json" in st.session_state:
         try:
-            # Initialize BigQuery client
             client = bigquery.Client.from_service_account_info(st.session_state.google_service_account_json)
+            st.success("BigQuery client initialized successfully!")
             return client
         except Exception as e:
             st.error(f"Error initializing BigQuery client: {e}")
             return None
     else:
-        st.error("Service account JSON file not loaded. Please provide a valid file.")
+        st.error("Service account JSON file not loaded.")
         return None
 
+# Load the JSON file when the script runs
+if "google_service_account_json" not in st.session_state:
+    load_service_account_json(SERVICE_ACCOUNT_JSON_PATH)
+
+# Function to execute a BigQuery query
 def run_bigquery_query(query):
-    # Initialize BigQuery client
     client = init_bigquery_client()
-        
     if client and query:
         try:
-            # Set up query job and execute
             query_job = client.query(query)
             results = query_job.result()
             df = results.to_dataframe()
+            st.success("Query executed successfully!")
             return df
         except Exception as e:
             st.error(f"Error executing BigQuery query: {e}")
