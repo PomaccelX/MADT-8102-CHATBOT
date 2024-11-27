@@ -274,11 +274,10 @@ def TF_graph(result_data):
 # Big query system 
 ## Function to initialize BigQuery client
 # Initialize BigQuery client
+# Initialize BigQuery client
 def init_bigquery_client():
-    # Check if the service account JSON is in session state
     if "google_service_account_json" in st.session_state and st.session_state.google_service_account_json:
         try:
-            # Initialize the BigQuery client using the session state
             client = bigquery.Client.from_service_account_info(st.session_state.google_service_account_json)
             return client
         except Exception as e:
@@ -288,18 +287,16 @@ def init_bigquery_client():
         st.error("Service account JSON file not loaded. Please provide a valid file.")
         return None
 
-
 # Run BigQuery query
 def run_bigquery_query(query):
-    # Initialize the BigQuery client
     client = init_bigquery_client()
     
     if client and query:
         try:
-            # Set up query job and execute
+            # Execute the query
             query_job = client.query(query)
-            results = query_job.result()
-            df = results.to_dataframe()
+            results = query_job.result()  # Waits for query to finish
+            df = results.to_dataframe()  # Converts the results to a dataframe
             return df
         except Exception as e:
             st.error(f"Error executing BigQuery query: {e}")
