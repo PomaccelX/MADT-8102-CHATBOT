@@ -5,29 +5,31 @@ st.title("Team Members")
 
 # Create a dictionary of team members and their information
 team_members = {
-    "จิรวัฒน์ เขมสถิตย์อนันต์": {"id": "6610422024", "image": "member/image1.jpg"},
-    "ธนวัฒน์ เหลืองวิโรจน์": {"id": "6610422005", "image": "member/image2.jpg"},
-    "ตรีภพ เนตรภู่": {"id": "6610422011", "image": "member/image3.jpg"},
-    "บุลวัชร์ เจริญยืนนาน": {"id": "6610422013", "image": "member/image4.jpg"},
-    "ชยพล หมื่นแจ้ง": {"id": "6610412004", "image": "member/image5.jpg"},
-    "บวรวิชญ์ ศรีมาศ": {"id": "6610424030", "image": "member/image6.jpg"},
-    "ณัฏฐชัย ใจรักษ์": {"id": "6610422021", "image": "member/image7.jpg"}
+    "บวรวิชญ์ ศรีมาศ":      {"id": "6610424030", "image": "member/image6.jpg"},
+    "ชยพล หมื่นแจ้ง":      {"id": "6610412004", "image": "member/image5.jpg"},
+    "ธนวัฒน์ เหลืองวิโรจน์":  {"id": "6610422005", "image": "member/image2.jpg"},
+    "ตรีภพ เนตรภู่":        {"id": "6610422011", "image": "member/image3.jpg"},
+    "บุลวัชร์ เจริญยืนนาน":   {"id": "6610422013", "image": "member/image4.jpg"},
+    "ณัฏฐชัย ใจรักษ์":       {"id": "6610422021", "image": "member/image7.jpg"},
+    "จิรวัฒน์ เขมสถิตย์อนันต์": {"id": "6610422024", "image": "member/image1.jpg"}
 }
 
-# Display information about each team member in two-column layout
-for name, info in team_members.items():
-    col1, col2 = st.columns([1, 3])  # Column 1 is for images, Column 2 is for text
+# Display information about each team member in a 4-column layout
+columns = st.columns(4)  # 4 columns for layout
+
+# Loop through team members and display their information
+for index, (name, info) in enumerate(team_members.items()):
+    col_index = index % 4  # To cycle through the 4 columns
     
-    # Column 1 - Image
-    with col1:
+    # Display in the appropriate column
+    with columns[col_index]:
         try:
-            st.image(info['image'], width=200)
+            st.image(info['image'], width=200)  # Display image
+            st.subheader(name)  # Display name
+            st.write(f"ID: {info['id']}")  # Display ID
         except Exception as e:
             st.write(f"Error loading image: {e}")
-    
-    # Column 2 - Name and ID
-    with col2:
-        st.subheader(name)
-        st.write(f"ID: {info['id']}")
-    
-    st.write("---")
+
+    # Add some spacing after each member's info to make it visually separated
+    if (index + 1) % 4 == 0:
+        st.write("---")
