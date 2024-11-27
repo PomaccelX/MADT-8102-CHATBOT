@@ -11,6 +11,7 @@ st.title("ChatBot 0.42 MADT")
 
 # Load secrets securely from Streamlit
 gemini_api_key = st.secrets["api_keys"].get("gemini_api_key")
+# Load secrets securely from Streamlit
 service_account_key = st.secrets["google"].get("service_account_key")
 
 # Check if the service account key is loaded
@@ -20,11 +21,11 @@ if service_account_key:
         # Try to load the JSON string into a dictionary
         key_dict = json.loads(service_account_key)
         st.session_state.google_service_account_json = key_dict  # Save to session state
-        st.write(st.session_state.google_service_account_json)  # Debugging output
     except json.JSONDecodeError as e:
         st.error(f"Error decoding the Service Account Key: {e}. Please check the format.")
 else:
     st.error("Failed to load service account key. Please check your secrets.")
+
 
 
 ##--------------------------------------------------------------------------------------
