@@ -5,3 +5,7 @@ pandas
 db_dtypes
 plotly
 matplotlib
+numpy
+pandas
+scikit-learn
+geopy
