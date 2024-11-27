@@ -18,6 +18,17 @@ st.set_page_config(
 )
 st.title("🌟 Machine Learning for MADT application")
 
+# Create Upload Panel for upload JSON Key file
+upload_file = st.file_uploader("Upload Google Service Account Key JSON", type="json")
+## Check status upload json key
+if upload_file :
+    try:
+        # Load the upload JSON File into session state
+        st.session_state.google_service_account_json = json.load(upload_file)           # Load file 
+        st.success("Google Service Account Key file uploaded successfully!")
+    except Exception as e :
+        st.error(f"Error reading the uploaded file: {e}")
+
 # ---------------- Upload JSON file ----------------
 def create_bigquery_client(json_file):
     # บันทึกไฟล์ JSON ชั่วคราว
