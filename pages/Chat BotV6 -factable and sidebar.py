@@ -13,6 +13,7 @@ st.title("ChatBot 0.42 MADT")
 gemini_api_key = st.secrets["api_keys"].get("gemini_api_key")
 service_account_key = st.secrets["google"].get("service_account_key")
 json_file_path = service_account_key
+st.write(json_file_path)
 
 if gemini_api_key and service_account_key:
     st.success("Gemini API Key and Service Account Key loaded successfully!")
@@ -20,6 +21,7 @@ else:
     st.error("Failed to load Gemini API Key or Service Account Key. Please check your secrets.")
 
 # Convert service account key into a Python dictionary
+
 try:
     key_dict = json.loads(service_account_key)
     
@@ -244,7 +246,7 @@ def TF_graph(result_data):
 #---------------------------------------------------------------------------------------------------
 # Big query system 
 ## Function to initialize BigQuery client
-def init_bigquery_client(json_file_path):
+def init_bigquery_client():
         
     # Check if the JSON file is loaded into the session state
     if "google_service_account_json" in st.session_state:
