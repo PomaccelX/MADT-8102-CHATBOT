@@ -12,8 +12,8 @@ st.title("ChatBot 0.42 MADT")
 # Load secrets securely from Streamlit
 gemini_api_key = st.secrets["api_keys"].get("gemini_api_key")
 service_account_key = st.secrets["google"].get("service_account_key")
-json_file_path = service_account_key
 
+# Check if both keys exist
 if gemini_api_key and service_account_key:
     st.success("Gemini API Key and Service Account Key loaded successfully!")
 else:
@@ -21,10 +21,20 @@ else:
 
 # Convert service account key into a Python dictionary
 try:
+    # The service account key is a string, so it needs to be loaded into a dictionary
     key_dict = json.loads(service_account_key)
+    
+    # You can display the first few values to confirm it's loaded correctly (without exposing sensitive data)
+    st.subheader("Google Service Account Key")
+    st.write(f"Loaded Google Service Account Key: {key_dict['client_email'][:30]}...")  # Example: show part of the email to confirm
+    
 except json.JSONDecodeError:
     st.error("Error decoding the Service Account Key. Please check the format.")
     key_dict = None
+
+# You can now use `gemini_api_key` and `key_dict` in your app logic, for example:
+if key_dict:
+    st.write("Service Account Information:", key_dict)
 
 ##--------------------------------------------------------------------------------------
 data_dict = """ If  it's a question or requirement or any wording that about retrieving data from a database base on 
