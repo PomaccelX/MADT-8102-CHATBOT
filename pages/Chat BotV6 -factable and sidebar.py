@@ -239,37 +239,11 @@ def TF_graph(result_data):
     response = agent_05.generate_content(result_prompt)
     return response.text.strip()
 
-#-------------------------------------------------
-# Load from .gitignore
-def load_google_service_account(json_file_path):
-    """
-    Load a Google service account JSON file into Streamlit's session state.
-    
-    Args:
-        json_file_path (str): Path to the JSON file.
-    
-    Returns:
-        None: Updates `st.session_state` with the loaded JSON or shows error messages.
-    """
-    try:
-        # Load the JSON file
-        with open(json_file_path, 'r') as file:
-            st.session_state.google_service_account_json = json.load(file)
-        #st.success("Service account key loaded successfully!")
-    except FileNotFoundError:
-        st.error(f"JSON file not found at {json_file_path}. Please check the path.")
-    except json.JSONDecodeError:
-        st.error("Error decoding the JSON file. Please ensure it is valid.")
-
-# Example Usage
-json_file_path = r"D:\0_Master_degree\MADT8102_Advance report\test-multipage-web-main\madt8102-chatbot-final-project-84c8476d016a.json"
-load_google_service_account(json_file_path)
-#-------------------------------------------------
 ##--------------------------------------------------------------------------------------
 # Big query system 
 ## Function to initialize BigQuery client
 def init_bigquery_client(json_file_path):
-    load_google_service_account(json_file_path)
+
         
     # Check if the JSON file is loaded into the session state
     if "google_service_account_json" in st.session_state:
