@@ -1,7 +1,13 @@
 import streamlit as st
 
 # Title of the page
-st.title("Team Members")
+st.set_page_config(
+    page_title="🏠 MADT8102 FINAL PROJECT END TO END ",
+    page_icon="🏠",
+    layout="wide" 
+)
+
+st.title(" 🤵‍♂️ Team Members")
 
 # Create a dictionary of team members and their information
 team_members = {

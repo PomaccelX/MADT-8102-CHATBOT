@@ -12,6 +12,7 @@ st.title("ChatBot 0.42 MADT")
 # Load secrets securely from Streamlit
 gemini_api_key = st.secrets["api_keys"].get("gemini_api_key")
 
+
 if gemini_api_key :
     st.success("Gemini API Key loaded successfully!")
 else:
