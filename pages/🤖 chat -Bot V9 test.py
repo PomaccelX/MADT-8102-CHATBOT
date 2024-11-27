@@ -7,7 +7,12 @@ import db_dtypes
 #---------------------------------------------------------------------------------------------------------------------------
 
 # Main Application Title
-st.title("ChatBot 0.42 MADT")
+st.set_page_config(
+    page_title="MADT8102 FINAL PROJECT END TO END",
+    page_icon="🤖",
+    layout="wide" 
+)
+st.title("🤖 Chat Bot application")
 
 # Load Gemini API Key
 gemini_api_key = st.secrets["api_keys"].get("gemini_api_key")
