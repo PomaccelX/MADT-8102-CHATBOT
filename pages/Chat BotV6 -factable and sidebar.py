@@ -4,7 +4,26 @@ from google.cloud import bigquery
 import plotly.express as px
 import json
 import db_dtypes
+#---------------------------------------------------------------------------------------------------------------------------
 
+# Main Application Title
+st.title("ChatBot 0.42 MADT")
+
+# Load secrets securely from Streamlit
+gemini_api_key = st.secrets["api_keys"].get("gemini_api_key")
+service_account_key = st.secrets["google"].get("service_account_key")
+
+if gemini_api_key and service_account_key:
+    st.success("Gemini API Key and Service Account Key loaded successfully!")
+else:
+    st.error("Failed to load Gemini API Key or Service Account Key. Please check your secrets.")
+
+# Convert service account key into a Python dictionary
+try:
+    key_dict = json.loads(service_account_key)
+except json.JSONDecodeError:
+    st.error("Error decoding the Service Account Key. Please check the format.")
+    key_dict = None
 ##--------------------------------------------------------------------------------------
 data_dict = """ If  it's a question or requirement or any wording that about retrieving data from a database base on 
                     the table name is 'madt8102-chatbot-final-project.datasets.fact_transaction'
@@ -171,26 +190,8 @@ data_dict = """ If  it's a question or requirement or any wording that about ret
                     
                     """     
 
-#---------------------------------------------------------------------------------------------------------------------------
 
-# Main Application Title
-st.title("ChatBot 0.42 MADT")
-
-# Load secrets securely from Streamlit
-gemini_api_key = st.secrets["api_keys"].get("gemini_api_key")
-service_account_key = st.secrets["google"].get("service_account_key")
-
-if gemini_api_key and service_account_key:
-    st.success("Gemini API Key and Service Account Key loaded successfully!")
-else:
-    st.error("Failed to load Gemini API Key or Service Account Key. Please check your secrets.")
-
-# Convert service account key into a Python dictionary
-try:
-    key_dict = json.loads(service_account_key)
-except json.JSONDecodeError:
-    st.error("Error decoding the Service Account Key. Please check the format.")
-    key_dict = None
+#-----------------------------------------------------------------------------------------------------------
 
 # AI Agents Initialization (Improved: Using a function to reduce code duplication)
 def init_genai_agent(model_name):
@@ -271,28 +272,31 @@ def TF_graph(result_data):
         st.error(f"Error generating graph code: {e}")
         return "Error"
 
-##------------------------------------------------------------------------------------------------------
+#---------------------------------------------------------------------------------------------------
 # BigQuery System
 
-# Function to initialize BigQuery client
-def init_bigquery_client(json_file_path):
-    """Initializes BigQuery client using service account credentials."""
+# Function to initialize BigQuery client using service account key stored in session state
+def init_bigquery_client():
+    """Initializes BigQuery client using service account credentials stored in session state."""
     if "google_service_account_json" in st.session_state:
         try:
-            st.write(f"Session state JSON: {st.session_state.google_service_account_json}")  # Debugging line
-            client = bigquery.Client.from_service_account_info(st.session_state.google_service_account_json)
+            # Debug: Check the content of session state
+            st.write(f"Session state contains the Google Service Account Key: {st.session_state['google_service_account_json']}")
+            
+            # Initialize BigQuery client from service account information
+            client = bigquery.Client.from_service_account_info(st.session_state["google_service_account_json"])
             return client
         except Exception as e:
             st.error(f"Error initializing BigQuery client: {e}")
             return None
     else:
-        st.error("Service account JSON file not loaded. Please provide a valid file.")
+        st.error("Service account JSON file not loaded. Please provide a valid file in the session state.")
         return None
 
 # Function to execute a BigQuery SQL query
 def run_bigquery_query(query):
     """Executes a BigQuery query and returns the result as a Pandas DataFrame."""
-    client = init_bigquery_client(service_account_key)  # Assumes `service_account_key` is passed correctly
+    client = init_bigquery_client()  # Now uses session state for initialization
     if client and query:
         try:
             query_job = client.query(query)
@@ -393,27 +397,6 @@ for i, prompt in enumerate(st.session_state.user_input_history, start=1):
         
         # Additional logic for other categories if needed
         break  # Exit the loop after processing the first clicked history button
-
-#-------------------------------------------------
-# Create Upload Panel for upload JSON Key file
-#'''
-#upload_file = st.file_uploader("Upload Google Service Account Key JSON", type="json")
-
-## Check status upload json key
-#if upload_file :
-#    try:
-#        # Load the upload JSON File into session state
-#        st.session_state.google_service_account_json = json.load(upload_file)           # Load file 
-#        st.success("Google Service Account Key file uploaded successfully!")
-#    except Exception as e :
-#        st.error(f"Error reading the uploaded file: {e}")
-#'''
-
-
-## Create an type space for GEMINI API KEY
-
-#gemini_api_key = 'AIzaSyBgvCcXEPMApduoTr_w8qJBQsrMan8rEDM'
-#gemini_api_key = st.text_input("Gemini API key : ", placeholder= "Type your API Key here...", type = 'password')
 
 #------------------------------------------------------------------------------------------------------------------------
 # Check GEMINI API KEY ready to use or not 
