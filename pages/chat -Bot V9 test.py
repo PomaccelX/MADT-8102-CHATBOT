@@ -338,7 +338,7 @@ for i, prompt in enumerate(st.session_state.user_input_history, start=1):
         if category == "01":
             try:
                 # Agent 2: Generate SQL Query based on user input
-                st.chat_message("user").markdown(user_input)
+                #st.chat_message("user").markdown(user_input)
                 sql_query = generate_sql_query(user_input)
                 result_data = run_bigquery_query(sql_query)  
 
@@ -352,8 +352,8 @@ for i, prompt in enumerate(st.session_state.user_input_history, start=1):
                 plot_code = TF_graph(graph_code).replace('```','').replace('python','').strip() 
 
                 # Store responses in session state
-                #st.session_state.qry = sql_query
-                #st.session_state.chat_history.append(("assistant", conversational_answer))
+                st.session_state.qry = sql_query
+                st.session_state.chat_history.append(("assistant", conversational_answer))
 
             except Exception as e:
                 st.error(f"Error processing SQL query: {e}")
