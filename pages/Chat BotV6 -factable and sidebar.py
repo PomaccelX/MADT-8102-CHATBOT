@@ -12,19 +12,20 @@ st.title("ChatBot 0.42 MADT")
 # Load secrets securely from Streamlit
 gemini_api_key = st.secrets["api_keys"].get("gemini_api_key")
 service_account_key = st.secrets["google"].get("service_account_key")
-json_file_path = service_account_key
 
-if gemini_api_key and service_account_key:
-    st.success("Gemini API Key and Service Account Key loaded successfully!")
+# Check if the service account key is loaded
+if service_account_key:
+    st.success("Service account key loaded successfully.")
+    try:
+        # Try to load the JSON string into a dictionary
+        key_dict = json.loads(service_account_key)
+        st.session_state.google_service_account_json = key_dict  # Save to session state
+        st.write(st.session_state.google_service_account_json)  # Debugging output
+    except json.JSONDecodeError as e:
+        st.error(f"Error decoding the Service Account Key: {e}. Please check the format.")
 else:
-    st.error("Failed to load Gemini API Key or Service Account Key. Please check your secrets.")
+    st.error("Failed to load service account key. Please check your secrets.")
 
-# Convert service account key into a Python dictionary
-try:
-    key_dict = json.loads(service_account_key)
-except json.JSONDecodeError:
-    st.error("Error decoding the Service Account Key. Please check the format.")
-    key_dict = None
 
 ##--------------------------------------------------------------------------------------
 data_dict = """ If  it's a question or requirement or any wording that about retrieving data from a database base on 
@@ -199,9 +200,6 @@ if "gemini_api_key" not in st.session_state:
 if "google_service_account_josn" not in st.session_state:
     st.session_state.google_service_account_json = None
 
-if "qry" not in st.session_state:
-    st.session_state.qry = None # Store SQL qury
-
 # Create Chatbot history
 if "chat_history" not in st.session_state:
     st.session_state.chat_history = [] # Empty list
@@ -274,10 +272,12 @@ def TF_graph(result_data):
 # Big query system 
 ## Function to initialize BigQuery client
 # Initialize BigQuery client
-# Initialize BigQuery client
+
 def init_bigquery_client():
-    if "google_service_account_json" in st.session_state and st.session_state.google_service_account_json:
+    # Check if the service account JSON is loaded in session state
+    if "google_service_account_json" in st.session_state:
         try:
+            # Initialize the BigQuery client using the session state JSON
             client = bigquery.Client.from_service_account_info(st.session_state.google_service_account_json)
             return client
         except Exception as e:
@@ -289,14 +289,14 @@ def init_bigquery_client():
 
 # Run BigQuery query
 def run_bigquery_query(query):
-    client = init_bigquery_client()
-    
+    client = init_bigquery_client()  # Initialize the BigQuery client
+
     if client and query:
         try:
             # Execute the query
             query_job = client.query(query)
             results = query_job.result()  # Waits for query to finish
-            df = results.to_dataframe()  # Converts the results to a dataframe
+            df = results.to_dataframe()  # Converts the results to a DataFrame
             return df
         except Exception as e:
             st.error(f"Error executing BigQuery query: {e}")
