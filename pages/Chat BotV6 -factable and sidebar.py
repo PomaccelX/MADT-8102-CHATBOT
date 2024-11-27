@@ -23,6 +23,7 @@ else:
 try:
     # The service account key is a string, so it needs to be loaded into a dictionary
     key_dict = json.loads(service_account_key)
+    st.write(key_dict)
     
     # You can display the first few values to confirm it's loaded correctly (without exposing sensitive data)
     st.subheader("Google Service Account Key")
