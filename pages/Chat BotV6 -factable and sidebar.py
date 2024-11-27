@@ -12,7 +12,6 @@ st.title("ChatBot 0.42 MADT")
 # Load secrets securely from Streamlit
 gemini_api_key = st.secrets["api_keys"].get("gemini_api_key")
 
-
 if gemini_api_key :
     st.success("Gemini API Key loaded successfully!")
 else:
@@ -310,8 +309,7 @@ if st.sidebar.button("Clear History"):
 
 # Loop through the user input history and create a button for each one
 for i, prompt in enumerate(st.session_state.user_input_history, start=1):
-    if st.sidebar.button(f"{i}. {prompt}"):
-        # Reset chat history with the selected prompt
+    if st.markdown(f"[{i}. {prompt}](#)"):
         st.session_state.chat_history = [("user", prompt)]
         #st.session_state.rerun_needed = False  # Set flag to trigger a rerun
         user_input = prompt
