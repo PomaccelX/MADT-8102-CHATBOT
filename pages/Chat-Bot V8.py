@@ -12,15 +12,14 @@ st.title("ChatBot 0.42 MADT")
 # Load Gemini API Key
 gemini_api_key = st.secrets["api_keys"].get("gemini_api_key")
 
-# Load Google Service Account Key
-google_service_account_key = st.secrets["google"].get("service_account_key")
-
 # Validate and load keys
 if gemini_api_key:
     st.success("Gemini API Key loaded successfully!")
 else:
     st.error("Failed to load Gemini API Key. Please check your secrets.")
 
+
+google_service_account_key = st.secrets["google"].get("service_account_key")
 if google_service_account_key:
     try:
         # Parse the service account JSON string into a dictionary
