@@ -11,11 +11,9 @@ st.title("ChatBot 0.42 MADT")
 
 # Load secrets securely from Streamlit
 gemini_api_key = st.secrets["api_keys"].get("gemini_api_key")
-service_account_key = st.secrets["google"].get("service_account_key")
-json_file_path = service_account_key
 
-if gemini_api_key and service_account_key:
-    st.success("Gemini API Key and Service Account Key loaded successfully!")
+if gemini_api_key :
+    st.success("Gemini API Key loaded successfully!")
 else:
     st.error("Failed to load Gemini API Key or Service Account Key. Please check your secrets.")
 
@@ -241,55 +239,34 @@ def TF_graph(result_data):
     The code should be fully executable in a Python environment and ready to display"""
     response = agent_05.generate_content(result_prompt)
     return response.text.strip()
-#---------------------------------------------------------------------------------------------------
+##--------------------------------------------------------------------------------------
 # Big query system 
-# Function to initialize BigQuery client
-# Load the JSON file directly from a path
-SERVICE_ACCOUNT_JSON_PATH = "path/to/your-service-account.json"  # Replace with your file path
-
-def load_service_account_json(path):
-    try:
-        with open(path, "r") as file:
-            service_account_json = json.load(file)
-            st.session_state.google_service_account_json = service_account_json
-            st.success("Service account JSON file loaded successfully!")
-    except Exception as e:
-        st.error(f"Failed to load JSON file: {e}")
-
+## Function to initialize BigQuery client
 def init_bigquery_client():
-    if "google_service_account_json" in st.session_state:
-        try:
+    if st.session_state.google_service_account_json:
+        try :
+            # Initialize BigQuery client using the service account JSON
             client = bigquery.Client.from_service_account_info(st.session_state.google_service_account_json)
-            st.success("BigQuery client initialized successfully!")
             return client
+            
         except Exception as e:
             st.error(f"Error initializing BigQuery client: {e}")
             return None
     else:
-        st.error("Service account JSON file not loaded.")
+        st.error("Please upload a valid Google Service Account Key file.")
         return None
 
-# Load the JSON file when the script runs
-if "google_service_account_json" not in st.session_state:
-    load_service_account_json(SERVICE_ACCOUNT_JSON_PATH)
 
-# Function to execute a BigQuery query
 def run_bigquery_query(query):
     client = init_bigquery_client()
     if client and query:
-        try:
-            query_job = client.query(query)
-            results = query_job.result()
-            df = results.to_dataframe()
-            st.success("Query executed successfully!")
-            return df
-        except Exception as e:
-            st.error(f"Error executing BigQuery query: {e}")
-            return None
-    else:
-        st.error("BigQuery client not initialized or query is empty.")
-        return None
+        query = query
+        job_config = bigquery.QueryJobConfig()
+        query_job = client.query(query, job_config=job_config)
+        results = query_job.result()
 
+        df = results.to_dataframe()
+        return df
 #----------------------------------------------------------------------------------------------------------------------
 
 # Initialize session state variables if not already present
@@ -350,7 +327,7 @@ for i, prompt in enumerate(st.session_state.user_input_history, start=1):
 
                 # Agent 4: Transform SQL Result into Conversational Answer
                 conversational_answer = sql_result_to_conversation(result_data)
-                #st.chat_message("assistant").markdown(conversational_answer)
+                st.chat_message("assistant").markdown(conversational_answer)
 
                 # Agent 5: Generate Python code for plotting based on result data
 
@@ -379,6 +356,18 @@ for i, prompt in enumerate(st.session_state.user_input_history, start=1):
         # Additional logic for other categories if needed
         break  # Exit the loop after processing the first clicked history button
 
+
+# Create Upload Panel for upload JSON Key file
+upload_file = st.file_uploader("Upload Google Service Account Key JSON", type="json")
+
+## Check status upload json key
+if upload_file :
+    try:
+        # Load the upload JSON File into session state
+        st.session_state.google_service_account_json = json.load(upload_file)           # Load file 
+        st.success("Google Service Account Key file uploaded successfully!")
+    except Exception as e :
+        st.error(f"Error reading the uploaded file: {e}")
 #------------------------------------------------------------------------------------------------------------------------
 # Check GEMINI API KEY ready to use or not 
 if gemini_api_key :
