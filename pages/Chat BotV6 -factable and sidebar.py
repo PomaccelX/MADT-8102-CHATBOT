@@ -13,9 +13,7 @@ st.title("ChatBot 0.42 MADT")
 gemini_api_key = st.secrets["api_keys"].get("gemini_api_key")
 service_account_key = st.secrets["google"].get("service_account_key")
 json_file_path = service_account_key
-#st.write(json_file_path)
-json_data = json.loads(json_file_path)
-st.write(json_data)
+
 
 if gemini_api_key and service_account_key:
     st.success("Gemini API Key and Service Account Key loaded successfully!")
