@@ -338,6 +338,7 @@ for i, prompt in enumerate(st.session_state.user_input_history, start=1):
         if category == "01":
             try:
                 # Agent 2: Generate SQL Query based on user input
+                st.chat_message("user").markdown(user_input)
                 sql_query = generate_sql_query(user_input)
                 result_data = run_bigquery_query(sql_query)  
 
