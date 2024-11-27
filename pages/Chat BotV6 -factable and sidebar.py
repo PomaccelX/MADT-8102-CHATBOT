@@ -274,7 +274,7 @@ def TF_graph(result_data):
 # Big query system 
 ## Function to initialize BigQuery client
 def init_bigquery_client():
-
+    client = init_bigquery_client()
     if "google_service_account_json" in st.session_state and st.session_state.google_service_account_json:
         try:
             client = bigquery.Client.from_service_account_info(st.session_state.google_service_account_json)
@@ -288,8 +288,8 @@ def init_bigquery_client():
 
 
 def run_bigquery_query(query):
-    client = init_bigquery_client()
-        
+    client = init_bigquery_client(json_file_path)
+       
     if client and query:
         try:
             # Set up query job and execute
