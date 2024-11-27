@@ -307,55 +307,6 @@ if st.sidebar.button("Clear History"):
     user_input = ""  # Clear previous input
     category = ""  # Reset category for new input
 
-# Loop through the user input history and create a button for each one
-for i, prompt in enumerate(st.session_state.user_input_history, start=1):
-    if st.sidebar.markdown(f"{i}. {prompt}"):
-        # Reset chat history with the selected prompt
-        st.session_state.chat_history = [("user", prompt)]
-        #st.session_state.rerun_needed = False  # Set flag to trigger a rerun
-        user_input = prompt
-
-        # Categorize the input
-        category = categorize_task(user_input)
-        
-        # Check if category is "01" (database query)
-        if category == "01":
-            try:
-                # Agent 2: Generate SQL Query based on user input
-                sql_query = generate_sql_query(user_input)
-                result_data = run_bigquery_query(sql_query)  
-
-                # Agent 4: Transform SQL Result into Conversational Answer
-                conversational_answer = sql_result_to_conversation(result_data)
-                st.chat_message("assistant").markdown(conversational_answer)
-
-                # Agent 5: Generate Python code for plotting based on result data
-
-                graph_code = TF_graph(conversational_answer)
-                plot_code = TF_graph(graph_code).replace('```','').replace('python','').strip() 
-
-                # Store responses in session state
-                st.session_state.qry = sql_query
-                st.session_state.chat_history.append(("assistant", conversational_answer))
-
-            except Exception as e:
-                st.error(f"Error processing SQL query: {e}")
-        
-        # Check if category is "02" (general conversation)
-        elif category == "02":
-            try:
-                # Agent 3: Respond to general conversation
-                conversation_response = general_conversation(user_input)
-
-                # Store response in session state
-                st.session_state.chat_history.append(("assistant", conversation_response))
-
-            except Exception as e:
-                st.error(f"Error in general conversation: {e}")
-        
-        # Additional logic for other categories if needed
-        break  # Exit the loop after processing the first clicked history button
-
 
 # Create Upload Panel for upload JSON Key file
 upload_file = st.file_uploader("Upload Google Service Account Key JSON", type="json")
