@@ -204,6 +204,12 @@ if st.button("Run ML"):
         text=[f"ZoneID: {row['zoneId']}" for _, row in df.iterrows()]
     )
 
+    # Adjusting the size of the graph
+    fig.update_layout(
+        height=800,  # Height in pixels
+        width=1200   # Width in pixels
+    )
+
     # เพิ่ม Centroids
     fig.add_scattermapbox(
         lat=cluster_summary['center_lat'], lon=cluster_summary['center_lon'],
