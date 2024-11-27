@@ -313,7 +313,7 @@ for i, prompt in enumerate(st.session_state.user_input_history, start=1):
         # Reset chat history with the selected prompt
         st.session_state.chat_history = [("user", prompt)]
         #st.session_state.rerun_needed = False  # Set flag to trigger a rerun
-        #user_input = prompt
+        user_input = prompt
 
         # Categorize the input
         category = categorize_task(user_input)
