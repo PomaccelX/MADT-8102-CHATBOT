@@ -248,17 +248,27 @@ def TF_graph(result_data):
 # Big query system 
 ## Function to initialize BigQuery client
 def init_bigquery_client():
-    if st.session_state.google_service_account_json:
-        try :
+    try:
+        # Load Google Service Account Key from secrets
+        google_service_account_key = st.secrets["google"].get("service_account_key")
+
+        if google_service_account_key:
+            # Parse the service account JSON string
+            service_account_data = json.loads(google_service_account_key)
+
             # Initialize BigQuery client using the service account JSON
-            client = bigquery.Client.from_service_account_info(st.session_state.google_service_account_json)
+            client = bigquery.Client.from_service_account_info(service_account_data)
+            st.success("BigQuery client initialized successfully!")
             return client
-            
-        except Exception as e:
-            st.error(f"Error initializing BigQuery client: {e}")
+        else:
+            st.error("Google Service Account Key not found in secrets. Please check your configuration.")
             return None
-    else:
-        st.error("Please upload a valid Google Service Account Key file.")
+
+    except json.JSONDecodeError as e:
+        st.error(f"Failed to parse Google Service Account Key: {e}")
+        return None
+    except Exception as e:
+        st.error(f"Error initializing BigQuery client: {e}")
         return None
 
 
