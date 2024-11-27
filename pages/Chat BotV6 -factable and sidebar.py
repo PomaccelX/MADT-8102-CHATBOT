@@ -14,20 +14,18 @@ gemini_api_key = st.secrets["api_keys"].get("gemini_api_key")
 service_account_key = st.secrets["google"].get("service_account_key")
 json_file_path = service_account_key
 
-
 if gemini_api_key and service_account_key:
     st.success("Gemini API Key and Service Account Key loaded successfully!")
 else:
     st.error("Failed to load Gemini API Key or Service Account Key. Please check your secrets.")
 
 # Convert service account key into a Python dictionary
-
-try:
-    key_dict = json.loads(service_account_key)
+#try:
+#    key_dict = json.loads(service_account_key)
     
-except json.JSONDecodeError:
-    st.error("Error decoding the Service Account Key. Please check the format.")
-    key_dict = None
+#except json.JSONDecodeError:
+#    st.error("Error decoding the Service Account Key. Please check the format.")
+#    key_dict = None
 
 ##--------------------------------------------------------------------------------------
 data_dict = """ If  it's a question or requirement or any wording that about retrieving data from a database base on 
