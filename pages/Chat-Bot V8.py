@@ -23,7 +23,8 @@ google_service_account_key = st.secrets["google"].get("service_account_key")
 if google_service_account_key:
     try:
         # Parse the service account JSON string into a dictionary
-        service_account_data = json.loads(google_service_account_key)
+        service_account_data = json.loads(st.secrets["google"]["service_account_key"])
+
         st.success("Google Service Account Key loaded successfully!")
     except json.JSONDecodeError:
         st.error("Failed to parse Google Service Account Key. Ensure it is properly formatted.")
