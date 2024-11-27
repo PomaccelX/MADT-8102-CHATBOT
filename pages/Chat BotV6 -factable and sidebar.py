@@ -172,21 +172,21 @@ data_dict = """ If  it's a question or requirement or any wording that about ret
                     | zone_name     | STRING      | Name or description of the zone.                     |
                     | regionId      | STRING      | Identifier for the region to which the zone belongs. |
 
-                    ### Relational Database Information
-                    The 'ProductId' column in the 'product' table is a                             one-to-many    relationship with the 'transaction_detail' column in the 'ProductId' table. 
-                    The 'ProductId' column in the 'return_transcation' table is a                  one-to-many    relationship with the 'transaction_detail' column in the 'ProductId' table. 
-                    The 'return_items_cause_id' column in the 'return_transcation' table is a      one-to-one     relationship with the 'return_items_cause_id' column in the 'return_item' table. 
-                    The 'InvoiceNo' column in the 'return_transcation' table is a                  one-to-many    relationship with the 'transaction_detail' column in the 'InvoiceNo' table. 
-                    The 'typeId' column in the 'sell_item_type' table is a                         one-to-many    relationship with the 'transaction_detail' column in the 'TypeId' table.                   
-                    The 'InvoiceNo' column in the 'transcation_header' table is a                  one-to-many    relationship with the 'transaction_detail' column in the 'InvoiceNo' table. 
-                    The 'branchID' column in the 'customer_branch' table is a                      one-to-many    relationship with the 'branchID' column in the 'transaction_header' table. 
-                    The 'accountId' column in the 'customer_branch' table is a                     one-to-many    relationship with the 'accountId' column in the 'customer_account' table. 
-                    The 'branchID' column in the 'customer_sales' table is a                       one-to-one     relationship with the 'branchID' column in the 'customer_branch' table. 
-                    The 'branchID' column in the 'customer_sales' table is a                       one-to-many    relationship with the 'branchID' column in the 'transaction_header' table. 
-                    The 'sale_id' column in the 'customer_sales' table is a                        one-to-one     relationship with the 'sale_id' column in the 'sales_person' table. 
-                    The 'provinceId' column in the 'province' table is a                           one-to-many    relationship with the 'provinceId' column in the 'customer_branch' table.
-                    The 'zoneId' column in the 'zone' table is a                                   one-to-many    relationship with the 'zoneId' column in the 'province' table.
-                    The 'regionId' column in the 'region' table is a                               one-to-many    relationship with the 'regionId' column in the 'zone' table.
+                                        ### Relational Database Information
+                    The 'ProductId' column in the 'madt8102-chatbot-final-project.datasets.product' table is a                             one-to-many    relationship with the 'ProductId' column in the 'madt8102-chatbot-final-project.datasets.transaction_detail' table. 
+                    The 'ProductId' column in the 'madt8102-chatbot-final-project.datasets.return_transcation' table is a                  one-to-many    relationship with the 'ProductId' column in the 'madt8102-chatbot-final-project.datasets.transaction_detail' table. 
+                    The 'return_items_cause_id' column in the 'madt8102-chatbot-final-project.datasets.return_transcation' table is a      one-to-one     relationship with the 'return_item' column in the 'madt8102-chatbot-final-project.datasets.return_items_cause_id' table. 
+                    The 'InvoiceNo' column in the 'madt8102-chatbot-final-project.datasets.return_transcation' table is a                  one-to-many    relationship with the 'InvoiceNo' column in the 'madt8102-chatbot-final-project.datasets.transaction_detail' table. 
+                    The 'typeId' column in the 'madt8102-chatbot-final-project.datasets.sell_item_type' table is a                         one-to-many    relationship with the 'TypeId' column in the 'madt8102-chatbot-final-project.datasets.transaction_detail' table.                   
+                    The 'InvoiceNo' column in the 'madt8102-chatbot-final-project.datasets.transcation_header' table is a                  one-to-many    relationship with the 'InvoiceNo' column in the 'madt8102-chatbot-final-project.datasets.transaction_detail' table. 
+                    The 'branchID' column in the 'madt8102-chatbot-final-project.datasets.customer_branch' table is a                      one-to-many    relationship with the 'branchID' column in the 'madt8102-chatbot-final-project.datasets.transaction_header' table. 
+                    The 'accountId' column in the 'madt8102-chatbot-final-project.datasets.customer_branch' table is a                     one-to-many    relationship with the 'accountId' column in the 'madt8102-chatbot-final-project.datasets.customer_account' table. 
+                    The 'branchID' column in the 'madt8102-chatbot-final-project.datasets.customer_sales' table is a                       one-to-one     relationship with the 'branchID' column in the 'madt8102-chatbot-final-project.datasets.customer_branch' table. 
+                    The 'branchID' column in the 'madt8102-chatbot-final-project.datasets.customer_sales' table is a                       one-to-many    relationship with the 'branchID' column in the 'madt8102-chatbot-final-project.datasets.transaction_header' table. 
+                    The 'sale_id' column in the 'madt8102-chatbot-final-project.datasets.customer_sales' table is a                        one-to-one     relationship with the 'sale_id' column in the 'madt8102-chatbot-final-project.datasets.sales_person' table. 
+                    The 'provinceId' column in the 'madt8102-chatbot-final-project.datasets.province' table is a                           one-to-many    relationship with the 'provinceId' column in the 'madt8102-chatbot-final-project.datasets.customer_branch' table.
+                    The 'zoneId' column in the 'madt8102-chatbot-final-project.datasets.zone' table is a                                   one-to-many    relationship with the 'zoneId' column in the 'madt8102-chatbot-final-project.datasets.province' table.
+                    The 'regionId' column in the 'madt8102-chatbot-final-project.datasets.region' table is a                               one-to-many    relationship with the 'regionId' column in the 'madt8102-chatbot-final-project.datasets.zone' table.
                     
                     """     
 #-----------------------------------------------------------------------------------------------------------
