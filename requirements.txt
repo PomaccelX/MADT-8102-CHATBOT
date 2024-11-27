@@ -6,6 +6,10 @@ db_dtypes
 plotly
 matplotlib
 numpy
-
 scikit-learn
 geopy
+google-api-core
+googlemaps
+
+
+
