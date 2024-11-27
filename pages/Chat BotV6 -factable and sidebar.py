@@ -23,7 +23,7 @@ else:
 try:
     # The service account key is a string, so it needs to be loaded into a dictionary
     key_dict = json.loads(service_account_key)
-    st.write(key_dict)
+    
     
     # You can display the first few values to confirm it's loaded correctly (without exposing sensitive data)
     st.subheader("Google Service Account Key")
@@ -31,6 +31,7 @@ try:
     
 except json.JSONDecodeError:
     st.error("Error decoding the Service Account Key. Please check the format.")
+    st.write(key_dict)
     key_dict = None
 
 # You can now use `gemini_api_key` and `key_dict` in your app logic, for example:
