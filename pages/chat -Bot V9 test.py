@@ -344,7 +344,7 @@ for i, prompt in enumerate(st.session_state.user_input_history, start=1):
 
                 # Agent 4: Transform SQL Result into Conversational Answer
                 conversational_answer = sql_result_to_conversation(result_data)
-                st.chat_message("assistant").markdown(conversational_answer)
+                #st.chat_message("assistant").markdown(conversational_answer)
 
                 # Agent 5: Generate Python code for plotting based on result data
 
