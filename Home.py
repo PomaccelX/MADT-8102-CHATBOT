@@ -25,6 +25,8 @@ for index, (name, info) in enumerate(team_members.items()):
     with columns[col_index]:
         try:
             st.image(info['image'], width=200)  # Display image
+            # Add space between the image and text
+            st.markdown("<br>", unsafe_allow_html=True)  # This adds an empty line
             st.subheader(name)  # Display name
             st.write(f"ID: {info['id']}")  # Display ID
         except Exception as e:
