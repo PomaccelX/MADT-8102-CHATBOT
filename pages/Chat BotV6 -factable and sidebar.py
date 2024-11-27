@@ -13,11 +13,11 @@ gemini_api_key = st.secrets["api_keys"]["gemini_api_key"]
 
 # Access Google Service Account Key
 service_account_key = st.secrets["google"]["service_account_key"]
-json_file_path = service_account_key 
+
 
 # Convert the service account key into a Python dictionary
 key_dict = json.loads(service_account_key)
-
+json_file_path = key_dict
 
 st.success("BigQuery client initialized successfully!")
 st.success("Google Service Account Key pull from secret successfully!")
