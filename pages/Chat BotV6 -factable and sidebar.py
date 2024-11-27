@@ -12,7 +12,7 @@ st.title("ChatBot 0.42 MADT")
 # Load secrets securely from Streamlit
 gemini_api_key = st.secrets["api_keys"].get("gemini_api_key")
 service_account_key = st.secrets["google"].get("service_account_key")
-json_file_path = service_account_key
+json_file_path = json.loads(service_account_key)
 st.write(json_file_path)
 
 if gemini_api_key and service_account_key:
