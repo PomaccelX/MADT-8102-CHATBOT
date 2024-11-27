@@ -11,22 +11,20 @@ st.title("ChatBot 0.42 MADT")
 
 # Load secrets securely from Streamlit
 gemini_api_key = st.secrets["api_keys"].get("gemini_api_key")
-# Load secrets securely from Streamlit
 service_account_key = st.secrets["google"].get("service_account_key")
+json_file_path = service_account_key
 
-# Check if the service account key is loaded
-if service_account_key:
-    st.success("Service account key loaded successfully.")
-    try:
-        # Try to load the JSON string into a dictionary
-        key_dict = json.loads(service_account_key)
-        st.session_state.google_service_account_json = key_dict  # Save to session state
-    except json.JSONDecodeError as e:
-        st.error(f"Error decoding the Service Account Key: {e}. Please check the format.")
+if gemini_api_key and service_account_key:
+    st.success("Gemini API Key and Service Account Key loaded successfully!")
 else:
-    st.error("Failed to load service account key. Please check your secrets.")
+    st.error("Failed to load Gemini API Key or Service Account Key. Please check your secrets.")
 
-
+# Convert service account key into a Python dictionary
+try:
+    key_dict = json.loads(service_account_key)
+except json.JSONDecodeError:
+    st.error("Error decoding the Service Account Key. Please check the format.")
+    key_dict = None
 
 ##--------------------------------------------------------------------------------------
 data_dict = """ If  it's a question or requirement or any wording that about retrieving data from a database base on 
@@ -192,33 +190,7 @@ data_dict = """ If  it's a question or requirement or any wording that about ret
                     The 'regionId' column in the 'region' table is a                               one-to-many    relationship with the 'regionId' column in the 'zone' table.
                     
                     """     
-#----------------------------------------------------------------------------------------------------------------------
-
-# Initialize session state variables if not already present
-if "gemini_api_key" not in st.session_state:
-    st.session_state.gemini_api_key = None
-
-if "google_service_account_josn" not in st.session_state:
-    st.session_state.google_service_account_json = None
-
-# Create Chatbot history
-if "chat_history" not in st.session_state:
-    st.session_state.chat_history = [] # Empty list
-
-# Create user_input history
-if "user_input_history" not in st.session_state:
-    st.session_state.user_input_history = []
-
-if "qry" not in st.session_state:
-    st.session_state.qry = None  # Store SQL query here
-
-# Generate welcome message if gemini key correct
-if "greeted" not in st.session_state:
-    st.session_state.greeted = False
-
-
 #-----------------------------------------------------------------------------------------------------------
-
 # AI System Functions
 ## Agent 01: Categorize User Input
 
@@ -268,18 +240,17 @@ def TF_graph(result_data):
     The code should be fully executable in a Python environment and ready to display"""
     response = agent_05.generate_content(result_prompt)
     return response.text.strip()
-
 #---------------------------------------------------------------------------------------------------
 # Big query system 
 ## Function to initialize BigQuery client
-# Initialize BigQuery client
-
-def init_bigquery_client():
-    # Check if the service account JSON is loaded in session state
+def init_bigquery_client(json_file_path):
+        
+    # Check if the JSON file is loaded into the session state
     if "google_service_account_json" in st.session_state:
         try:
-            # Initialize the BigQuery client using the session state JSON
+            # Initialize BigQuery client
             client = bigquery.Client.from_service_account_info(st.session_state.google_service_account_json)
+            #st.success("BigQuery client initialized successfully!")
             return client
         except Exception as e:
             st.error(f"Error initializing BigQuery client: {e}")
@@ -288,16 +259,17 @@ def init_bigquery_client():
         st.error("Service account JSON file not loaded. Please provide a valid file.")
         return None
 
-# Run BigQuery query
-def run_bigquery_query(query):
-    client = init_bigquery_client()  # Initialize the BigQuery client
 
+def run_bigquery_query(query):
+    client = init_bigquery_client(json_file_path)
+        
     if client and query:
         try:
-            # Execute the query
+            # Set up query job and execute
             query_job = client.query(query)
-            results = query_job.result()  # Waits for query to finish
-            df = results.to_dataframe()  # Converts the results to a DataFrame
+            results = query_job.result()
+            df = results.to_dataframe()
+            #st.success("Query executed successfully!")
             return df
         except Exception as e:
             st.error(f"Error executing BigQuery query: {e}")
@@ -305,9 +277,33 @@ def run_bigquery_query(query):
     else:
         st.error("BigQuery client not initialized or query is empty.")
         return None
-
-
 #----------------------------------------------------------------------------------------------------------------------
+
+# Initialize session state variables if not already present
+if "gemini_api_key" not in st.session_state:
+    st.session_state.gemini_api_key = None
+
+if "google_service_account_josn" not in st.session_state:
+    st.session_state.google_service_account_json = None
+
+if "qry" not in st.session_state:
+    st.session_state.qry = None # Store SQL qury
+
+# Create Chatbot history
+if "chat_history" not in st.session_state:
+    st.session_state.chat_history = [] # Empty list
+
+# Create user_input history
+if "user_input_history" not in st.session_state:
+    st.session_state.user_input_history = []
+
+if "qry" not in st.session_state:
+    st.session_state.qry = None  # Store SQL query here
+
+# Generate welcome message if gemini key correct
+if "greeted" not in st.session_state:
+    st.session_state.greeted = False
+
 # Sidebar to display user input history as buttons
 st.sidebar.title("User Input History")
 
