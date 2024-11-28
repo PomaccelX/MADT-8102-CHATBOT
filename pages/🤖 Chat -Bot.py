@@ -19,14 +19,9 @@ gemini_api_key = st.secrets["api_keys"].get("gemini_api_key")
 
 # Validate and load keys
 if gemini_api_key:
-    col1, col2 = st.columns(2)
-    with col1:
-        st.success("Gemini API Key loaded successfully!")
-    with col2:
-        st.success("Gemini API Key is ready to use.")
+    st.success("Gemini API Key loaded successfully!")
 else:
     st.error("Failed to load Gemini API Key. Please check your secrets.")
-
 
 # Load JSON google Key
 google_service_account_key = st.secrets["google"].get("service_account_key")
@@ -34,11 +29,8 @@ if google_service_account_key:
     try:
         # Parse the service account JSON string into a dictionary
         service_account_data = json.loads(st.secrets["google"]["service_account_key"])
-        col1, col2 = st.columns(2)
-        with col1:
-            st.success("Google Service Account Key loaded successfully!")
-        with col2:
-            st.success("Key is valid and ready for use.")
+
+        st.success("Google Service Account Key loaded successfully!")
     except json.JSONDecodeError:
         st.error("Failed to parse Google Service Account Key. Ensure it is properly formatted.")
 else:
