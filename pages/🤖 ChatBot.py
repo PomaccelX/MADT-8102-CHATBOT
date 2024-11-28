@@ -4,7 +4,7 @@ from google.cloud import bigquery
 import plotly.express as px
 import json
 import db_dtypes
-# Start
+# 
 #---------------------------------------------------------------------------------------------------------------------------
 
 # Main Application Title
